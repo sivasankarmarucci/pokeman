@@ -1,24 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
+import PokemonListingPage from "./component/PokemonListingPage";
+import PokemonDetailsPage from "./component/PokemonDetailsPage";
+import PokemonContext from "./hooks/PokemonContext";
+import { useState } from "react";
+
+//React Routing
+const browserRoute = createBrowserRouter([
+  {
+    path: "/",
+    element: <PokemonListingPage />,
+  },
+  {
+    path: "/details/:pokemanId",
+    element: <PokemonDetailsPage />,
+  },
+]);
 
 function App() {
+  const [pokemon, setPokemon] = useState({});
+
+  const addPokemon = (selectedPokemon) => {
+    setPokemon(selectedPokemon);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <PokemonContext.Provider value={{ pokemon, addPokemon }}>
+      <RouterProvider router={browserRoute}>
+        <div className="App">
+          <Outlet />
+        </div>
+      </RouterProvider>
+    </PokemonContext.Provider>
   );
 }
 
